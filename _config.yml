@@ -9,16 +9,11 @@ exclude:
   - "/vendor/"
 
 # Site settings
-title: FlashSQL
-subtitle: "기술 블로그"
-email: meeeeejin@gmail.com
+title: FlashSQL 기술 블로그
+subtitle: "비휘발성 메모리 기반 개방형 고성능 DBMS 개발"
+email: vldb.skku@gmail.com
 name: FlashSQL
-description: >
-  A simple yet classy theme for your Jekyll website or blog.
-# Base URL of site (i.e. /blog). It should always start with a slash,
-# and never end with a slash. Set it to a blank value if hosting at the
-# root of your server.
-baseurl: "/centrarium" # the subpath of your site, e.g. /blog/
+baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://flashsql.github.io" # the base hostname & protocol for your site
 cover: "/assets/header_image.jpg"
 logo: "/assets/vldb_web_logo.png"
@@ -110,3 +105,8 @@ protocols:
     os_repo: "https://github.com/bencentra/centrarium.com"
     os_rcs_type: "git"
     os_src: "git@github.com:bencentra/centrarium.com.git"
+
+collections:
+  authors:
+    title: Authors
+    output: true
