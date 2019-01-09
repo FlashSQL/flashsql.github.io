@@ -2,19 +2,10 @@
 
   <div class="wrapper">
 
-    <h3 class="footer-heading">{{ site.name }}</h3>
-
-    <div class="site-navigation">
-
-      <p><strong>Site Map</strong></p>
-      <ul class="pages">
-        {% for page in site.pages %}
-        {% if page.title and page.main_nav != false %}
-          <li class="nav-link"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-        {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
+    <p id="copyright">
+      <a href="https://sites.google.com/site/skkuvldblab">Copyright Sungkyunkwan University VLDB Lab.</a>
+      All rights reserved.
+    </p>
 
     <div class="site-contact">
 

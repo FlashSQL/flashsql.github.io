@@ -23,13 +23,13 @@ layout: default
       <p>{{ post.content | strip_html | truncatewords: 50 }}</p>
     </section>
     <section class="post-meta">
-      <div class="post-date">{{ post.date | date: "%B %-d, %Y" }}</div>
+      <div class="post-date">{{ post.date | date: "%Y-%m-%d" }}</div>
       <div class="post-categories">
-      {% if post.categories.size > 0 %}in {% for cat in post.categories %}
+      {% if post.categories.size > 0 %} {% for cat in post.categories %}
         {% if site.jekyll-archives %}
-        <a href="{{ site.baseurl }}/category/{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %}
+        <a href="{{ site.baseurl }}/category/{{ cat }}" class="tag">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
         {% else %}
-        <a href="{{ site.baseurl }}/posts/#{{ cat }}">{{ cat | capitalize }}</a>{% if forloop.last == false %}, {% endif %}
+        <a href="{{ site.baseurl }}/posts/#{{ cat }}" class="tag">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
         {% endif %}
       {% endfor %}{% endif %}
       </div>
@@ -42,44 +42,43 @@ layout: default
 </ul>
 
 <nav class="pagination" role="navigation">
-	<p>
-    {% if paginator.previous_page %}
-			{% if paginator.page == 2 %}
-			<a class="newer-posts" href="{% if site.baseurl %}{{ site.baseurl }}{% endif %}/">
-        <span class="fa-stack fa-lg">
-          <i class="fa fa-square fa-stack-2x"></i>
-          <i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
-        </span>
-      </a>
-			{% else %}
-			<a class="newer-posts" href="{{ site.baseurl }}/page{{paginator.previous_page}}">
-				<span class="fa-stack fa-lg">
-					<i class="fa fa-square fa-stack-2x"></i>
-					<i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
-				</span>
-			</a>
-			{% endif %}
-		{% else %}
-		<span class="fa-stack fa-lg">
-      <i class="fa fa-square fa-stack-2x"></i>
-      <i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i>
-    </span>
-		{% endif %}
-		<span class="page-number">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
-		{% if paginator.next_page %}
-		<a class="newer-posts" href="{{ site.baseurl }}/page{{paginator.next_page}}">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-square fa-stack-2x"></i>
-        <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
-      </span>
+  {% if paginator.previous_page %}
+  <li class="page-prev">
+    <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
     </a>
-		{% else %}
-		<span class="fa-stack fa-lg">
-      <i class="fa fa-square fa-stack-2x"></i>
-      <i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i>
-    </span>
-		{% endif %}
-	</p>
+  </li>
+  {% else %}
+  <li class="page-prev">
+    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+  </li>
+  {% endif %}
+
+  {% for page in (1..paginator.total_pages) %}
+    {% if page == paginator.page %}
+    <li class="page-number active">{{ page }}</li>
+    {% elsif page == 1 %}
+    <li class="page-number">
+      <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+    </li>
+    {% else %}
+    <li class="page-number">
+      <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+    </li>
+    {% endif %}
+  {% endfor %}
+
+  {% if paginator.next_page %}
+  <li class="page-next">
+    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </a>
+  </li>
+  {% else %}
+  <li class="page-next">
+    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+  </li>
+  {% endif %}
 </nav>
 
 </div>
