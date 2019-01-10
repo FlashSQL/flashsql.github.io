@@ -487,22 +487,20 @@ pre code.hljs {
     padding-bottom: 1em; }
     .page-content .post .post-meta .post-categories {
       float: right; }
-      .page-content .post .post-meta .post-categories .tags {
-        font-size: 0.9em; }
-        .page-content .post .post-meta .post-categories .tags a.tag {
-          display: inline-block;
-          margin: 0 5px 5px 0;
-          padding: 0 10px;
-          border: 1px solid #e6e6e6;
-          border-radius: 4px;
-          vertical-align: middle;
-          background-color: #fafafa;
-          color: #1e1e1e;
-          font-size: 13px;
-          line-height: 24px;
-          /* 24px = 26(height) - 2(border) */ }
-        .page-content .post .post-meta .post-categories .tags a.tag:hover {
-          background-color: #e6e6e6; }
+      .page-content .post .post-meta .post-categories a.tag {
+        display: inline-block;
+        margin: 0 5px 5px 0;
+        padding: 0 10px;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        vertical-align: middle;
+        background-color: #fafafa;
+        color: #1e1e1e;
+        font-size: 13px;
+        line-height: 24px;
+        /* 24px = 26(height) - 2(border) */ }
+      .page-content .post .post-meta .post-categories a.tag:hover {
+        background-color: #e6e6e6; }
   .page-content .post .post-content {
     padding: 1em 0; }
   .page-content .post .share {
