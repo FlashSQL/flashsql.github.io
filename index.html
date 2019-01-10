@@ -19,6 +19,10 @@ layout: default
     <h2>
       <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
     </h2>
+    <section class="post-author">
+      <i class="fa fa-user"></i>
+      By <font color="#e74c3c">{{ post.author }}</font>
+    </section>
     <section class="post-excerpt" itemprop="description">
       <p>{{ post.content | strip_html | truncatewords: 50 }}</p>
     </section>

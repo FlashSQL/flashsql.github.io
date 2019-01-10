@@ -7,7 +7,10 @@ layout: default
   <div class="scrim {% if page.cover %}has-cover{% endif %}">
     <header class="post-header">
       <h1 class="title">{{ page.title }}</h1>
-      <p class="info">by <strong>{{ page.author }}</strong></p>
+      <p class="info">
+        <i class="fa fa-user"></i>
+        By <strong><font color="e74c3c">{{ page.author }}</font></strong>
+      </p>
     </header>
   </div>
 </div>
@@ -17,13 +20,13 @@ layout: default
 {% unless page.cover %} {% include page_divider.html %} {% endunless %}
 
 <section class="post-meta">
-  <div class="post-date">{{ page.date | date: "%Y-%m-%d" }}</div>
   <div class="post-categories">
+  <i class="fa fa-tag"></i>
   {% if page.categories.size > 0 %} {% for cat in page.categories %}
     {% if site.jekyll-archives %}
-    <a href="{{ site.baseurl }}/category/{{ cat }}">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
+    <a href="{{ site.baseurl }}/category/{{ cat }}" class="tag">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
     {% else %}
-    <a href="{{ site.baseurl }}/posts/#{{ cat }}">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
+    <a href="{{ site.baseurl }}/posts/#{{ cat }}" class="tag">{{ cat }}</a>{% if forloop.last == false %} {% endif %}
     {% endif %}
   {% endfor %}{% endif %}
   </div>
@@ -46,7 +49,7 @@ layout: default
   {% for social in site.social %}
     {% capture full_url %}{{ site.url }}{{ site.baseurl }}{{ page.url }}{% endcapture %}
     {% if social.name == "Facebook" and social.share == true %}
-      <a href="//www.facebook.com/sharer.php?t={{ page.title | cgi_escape }}&u={{ full_url | cgi_escape}}"
+      <a href="//www.facebook.com/sharer/sharer.php?t={{ page.title | cgi_escape }}&u={{ full_url | cgi_escape}}"
         onclick="window.open(this.href, '{{ social.icon }}-share', 'width=550,height=255');return false;">
         <i class="fa fa-{{ social.icon | remove_first: '-square' }}-square fa-lg"></i>
       </a>
@@ -114,6 +117,19 @@ layout: default
 </section>
 {% endunless %}
 {% endif %}
+
+<section class="post-author-divider">
+  <hr>
+</section>
+
+<section class="post-footer">
+  <a class="post-author" href="/author/amj.md">
+    <div class="author-image" style="background-image:url(/assets/vldb_logo.png);">
+    </div>
+    <p class="author-name">{{ page.author }}</p>
+  </a>
+  <p class="post-date">{{ page.date | date: "%Y-%m-%d" }}</p>
+</section>
 
 </div>
 </div>

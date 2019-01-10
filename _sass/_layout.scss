@@ -201,6 +201,10 @@ pre code.hljs {
 	/*
 	*	index.html
 	*/
+	.post-author {
+		font-size: 0.9em;
+		margin: 0 0 1rem;
+	}
 	.post-list {
 		padding-top: 1em !important;
 		@extend %default-ul;
@@ -293,27 +297,30 @@ pre code.hljs {
 		}
 		.post-meta {
 			padding-bottom: 1em;
+			.post-categories {
+				float: right;
+				.tags {
+					font-size: 0.9em;
+					a.tag {
+				    display: inline-block;
+				    margin: 0 5px 5px 0;
+				    padding: 0 10px;
+				    border: 1px solid #e6e6e6;
+				    border-radius: 4px;
+				    vertical-align: middle;
+				    background-color: #fafafa;
+				    color: #1e1e1e;
+				    font-size: 13px;
+				    line-height: 24px; /* 24px = 26(height) - 2(border) */
+					}
+					a.tag:hover {
+			    	background-color: #e6e6e6;
+					}
+				}
+			}
 		}
 		.post-content {
 			padding: 1em 0;
-		}
-		.tags {
-			font-size: 0.9em;
-			a.tag {
-		    display: inline-block;
-		    margin: 0 5px 5px 0;
-		    padding: 0 10px;
-		    border: 1px solid #e6e6e6;
-		    border-radius: 4px;
-		    vertical-align: middle;
-		    background-color: #fafafa;
-		    color: #1e1e1e;
-		    font-size: 13px;
-		    line-height: 24px; /* 24px = 26(height) - 2(border) */
-			}
-			a.tag:hover {
-	    	background-color: #e6e6e6;
-			}
 		}
 		.share {
 			font-weight: bold;
@@ -350,6 +357,38 @@ pre code.hljs {
 				margin: 1em 0;
 				text-align: right;
 			}
+		}
+		.post-author-divider {
+			border-bottom: 1px solid $light-gray;
+			margin: 10 0;
+		}
+		.post-footer {
+	    position: relative;
+	    height: 120px;
+	    margin: 0 50px;
+		}
+		.author-image {
+	    position: absolute;
+	    top: 30px;
+	    left: 0;
+	    width: 60px;
+	    height: 60px;
+	    border-radius: 100%;
+	    background-size: cover;
+		}
+		.author-name {
+	    position: absolute;
+	    top: 44px; /* 120 = a + (14 + 6 + 12) + a, a = (120 - (14 + 6 + 12)) / 2, a = 44px */
+	    left: 75px; /* 75px = 60(#author-image width) + 15(spacing) */
+	    margin: 0;
+	    font-size: 14px;
+		}
+		.post-date {
+	    position: absolute;
+	    top: 64px; /* 64px = 44(#author-name top) + 14(#author-name height) + 6(spacing) */
+	    left: 75px; /* 75px = (#author-name left) */
+	    margin: 0;
+	    font-size: 12px;
 		}
 	}
 	/*
