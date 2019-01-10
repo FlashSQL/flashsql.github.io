@@ -5,8 +5,8 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 10 Jan 2019 15:45:18 +0900</pubDate>
-    <lastBuildDate>Thu, 10 Jan 2019 15:45:18 +0900</lastBuildDate>
+    <pubDate>Thu, 10 Jan 2019 17:58:18 +0900</pubDate>
+    <lastBuildDate>Thu, 10 Jan 2019 17:58:18 +0900</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -131,115 +131,33 @@ Read  : Page from disk -&amp;gt; Transform -&amp;gt; Original Page
         <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
 </description>
         <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/rocksdb/mysql/2018/04/18/test8.html</link>
-        <guid isPermaLink="true">http://localhost:4000/rocksdb/mysql/2018/04/18/test8.html</guid>
-        
-        
-        <category>RocksDB</category>
-        
-        <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test7.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test7.html</guid>
+        <link>http://localhost:4000/mysql/flash/2018/04/18/test.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/flash/2018/04/18/test.html</guid>
         
         
         <category>MySQL</category>
         
+        <category>Flash</category>
+        
       </item>
     
       <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+        <title>Dummy Post</title>
+        <description>&lt;p&gt;This is just a dummy post. Lorem ipsum and all the rest.&lt;/p&gt;
+
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test6.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test6.html</guid>
+        <pubDate>Sat, 18 Apr 2015 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</guid>
         
         
         <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test5.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test5.html</guid>
-        
-        
-        <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test4.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test4.html</guid>
-        
-        
-        <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/rocksdb/2018/04/18/test3.html</link>
-        <guid isPermaLink="true">http://localhost:4000/rocksdb/2018/04/18/test3.html</guid>
-        
-        
-        <category>RocksDB</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test2.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test2.html</guid>
-        
-        
-        <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test10.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test10.html</guid>
-        
-        
-        <category>MySQL</category>
-        
-      </item>
-    
-      <item>
-        <title>Test</title>
-        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/rocksdb/2018/04/18/test1.html</link>
-        <guid isPermaLink="true">http://localhost:4000/rocksdb/2018/04/18/test1.html</guid>
-        
         
         <category>RocksDB</category>
         
