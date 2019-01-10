@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FlashSQL 기술 블로그</title>
+    <description></description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 10 Jan 2019 15:22:23 +0900</pubDate>
+    <lastBuildDate>Thu, 10 Jan 2019 15:22:23 +0900</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>Punch Hole</title>
+        <description>&lt;h1 id=&quot;punch-hole&quot;&gt;Punch hole&lt;/h1&gt;
+
+&lt;p&gt;아래 두 자료 참고해서 정리&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mysqlserverteam.com/innodb-transparent-page-compression/&quot;&gt;InnoDB Transparent Page Compression&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/innodb-page-compression.html&quot;&gt;MySQL 5.7 Manual&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;transparent-page-compression&quot;&gt;Transparent Page Compression&lt;/h2&gt;
+
+&lt;p&gt;InnoDB는 &lt;a href=&quot;https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_file_per_table&quot;&gt;file-per-table&lt;/a&gt; 테이블스페이스에 존재하는 테이블에 대해 &lt;strong&gt;페이지 레벨&lt;/strong&gt; 압축을 지원한다. 이는 &lt;em&gt;Transparent Page Compression&lt;/em&gt; 라 불린다. 페이지 압축은 &lt;code class=&quot;highlighter-rouge&quot;&gt;CREATE TABLE&lt;/code&gt; 또는 &lt;code class=&quot;highlighter-rouge&quot;&gt;ALTER TABLE&lt;/code&gt; 문에 &lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSION&lt;/code&gt; attribute를 명시하여 사용할 수 있으며, &lt;em&gt;Zlib&lt;/em&gt;과 &lt;em&gt;LZ4&lt;/em&gt; 압축 알고리즘을 지원한다. 예를 들어, 아래와 같이 사용할 수 있다:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CREATE TABLE t1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c1 INT&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;COMPRESSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;zlib&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;한편, &lt;code class=&quot;highlighter-rouge&quot;&gt;ALTER TABLE ... COMPRESSION&lt;/code&gt;은 테이블스페이스의 압축 attribute만 업데이트한다(즉, metadata만 변경). 새 압축 알고리즘을 설정한 후에 발생하는 쓰기는 새로운 설정을 사용하지만, 기존 압축 페이지에 새 압축 알고리즘을 적용하려면 &lt;code class=&quot;highlighter-rouge&quot;&gt;OPTIMIZE TABLE&lt;/code&gt;을 사용하여 테이블을 재빌드해야 한다:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ALTER TABLE t1 &lt;span class=&quot;nv&quot;&gt;COMPRESSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;zlib&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+OPTIMIZE TABLE t1&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;High level에서 봤을 때, transparent page compression은 간단한 페이지 변환이다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Write : Page -&amp;gt; Transform -&amp;gt; Write transformed page to disk -&amp;gt; Punch hole
+Read  : Page from disk -&amp;gt; Transform -&amp;gt; Original Page
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;MySQL 5.7에는 여러 개의 페이지 플러싱 전용 thread가 존재한다. 이는 디스크에 페이지를 쓰기 전에 전용 background thread로 “변환”을 오프로드하여 디스크에 기록한 후, 압축과 “hole punching”을 병렬 처리하는 데 적합하다.&lt;/p&gt;
+
+&lt;p&gt;그리고 transparent page compression 기능을 사용하려면 운영 체제와 파일 시스템이 &lt;a href=&quot;https://en.wikipedia.org/wiki/Sparse_file&quot;&gt;sparse files&lt;/a&gt;과 hole punching을 지원해야 한다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Sparse file은 0이 아닌 영역에만 물리적인 디스크 공간을 할당하는 파일 유형으로써, 파일 자체가 부분적으로 비어 있는 경우 파일 시스템 공간을 보다 효율적으로 사용할 수 있음&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Sparse_file_%28en%29.svg/1024px-Sparse_file_%28en%29.svg.png&quot; alt=&quot;sparse file&quot; width=&quot;400&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&quot;linux-상에서의-hole-punch-크기&quot;&gt;Linux 상에서의 Hole Punch 크기&lt;/h2&gt;
+
+&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 &lt;code class=&quot;highlighter-rouge&quot;&gt;InnoDB 페이지 크기 - 파일 시스템 블록 크기&lt;/code&gt;보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_page_size&quot;&gt;innodb_page_size&lt;/a&gt;가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;monitoring&quot;&gt;Monitoring&lt;/h2&gt;
+
+&lt;p&gt;Hole punching에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -l&lt;/code&gt;로 보여지는 파일 크기는 블록 디바이스의 실제 할당 크기가 아닌 논리적 파일 크기를 표시한다. 이는 sparse file의 일반적인 이슈며, 논리적 크기와 실제 할당 크기는 &lt;a href=&quot;https://dev.mysql.com/doc/refman/5.7/en/innodb-sys-tablespaces-table.html&quot;&gt;INNODB_SYS_TABLESPACES&lt;/a&gt;의 information schema 테이블에 쿼리를 수행하여 얻을 수 있다.&lt;/p&gt;
+
+&lt;p&gt;다음과 같은 추가적인 열이 information schema 뷰에 추가되었다: &lt;code class=&quot;highlighter-rouge&quot;&gt;FS_BLOCK_SIZE&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;FILE_SIZE&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ALLOCATED_SIZE&lt;/code&gt; 및 &lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSION&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FS_BLOCK_SIZE&lt;/code&gt;: 파일 시스템 블록 크기&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FILE_SIZE&lt;/code&gt;: 파일의 논리적 크기이며, ls -l로 볼 수 있음&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ALLOCATED_SIZE&lt;/code&gt;: 파일 시스템의 블록 디바이스에 실제로 할당된 크기&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSION&lt;/code&gt;: 현재 압축 알고리즘 설정(있는 경우)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;앞서 언급했듯이, &lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSION&lt;/code&gt; 값은 현재 테이블스페이스의 설정이며 현재 테이블스페이스에 있는 모든 페이지가 해당 형식을 갖는 것을 보장하지는 않는다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;다음은 간단한 예시다:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; from information_schema.INNODB_SYS_TABLESPACES WHERE name like &lt;span class=&quot;s1&quot;&gt;'linkdb%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++-------+------------------------+------+-------------+----------------------+-----------+---------------+------------+---------------+-------------+----------------+-------------+
+| SPACE | NAME                   | FLAG | FILE_FORMAT | ROW_FORMAT           | PAGE_SIZE | ZIP_PAGE_SIZE | SPACE_TYPE | FS_BLOCK_SIZE | FILE_SIZE   | ALLOCATED_SIZE | COMPRESSION |
++-------+------------------------+------+-------------+----------------------+-----------+---------------+------------+---------------+-------------+----------------+-------------+
+|    23 | linkdb/linktable#P#p0  |    0 | Antelope    | Compact or Redundant |     16384 |             0 | Single     |           512 |  4861198336 |     2376154112 | LZ4         |
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;name, &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;file_size-allocated_size&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;100&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;/file_size as compressed_pct from information_schema.INNODB_SYS_TABLESPACES WHERE name like &lt;span class=&quot;s1&quot;&gt;'linkdb%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++------------------------+----------------+
+| name                   | compressed_pct |
++------------------------+----------------+
+| linkdb/linktable#P#p0  |        51.1323 |
+| linkdb/linktable#P#p1  |        51.1794 |
+| linkdb/linktable#P#p2  |        51.5254 |
+| linkdb/linktable#P#p3  |        50.9341 |
+| linkdb/linktable#P#p4  |        51.6542 |
+| linkdb/linktable#P#p5  |        51.2027 |
+| linkdb/linktable#P#p6  |        51.3837 |
+| linkdb/linktable#P#p7  |        51.6309 |
+| linkdb/linktable#P#p8  |        51.8193 |
+| linkdb/linktable#P#p9  |        50.6776 |
+| linkdb/linktable#P#p10 |        51.2959 |
+| linkdb/linktable#P#p11 |        51.7169 |
+| linkdb/linktable#P#p12 |        51.0571 |
+| linkdb/linktable#P#p13 |        51.4743 |
+| linkdb/linktable#P#p14 |        51.4895 |
+| linkdb/linktable#P#p15 |        51.2749 |
+| linkdb/counttable      |        50.1664 |
+| linkdb/nodetable       |        31.2724 |
++------------------------+----------------+
+18 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;/h2&gt;
+
+&lt;h3 id=&quot;file-system-fragmentation&quot;&gt;File system fragmentation&lt;/h3&gt;
+
+&lt;p&gt;블록을 파일 시스템의 free list로 다시 내보내는 hole punching으로 인해 파일 시스템에서 fragmentation이 일어날 수 있다. 여기에는 두 가지 파급 효과가 있다:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Sequential 스캔이 실제로는 Random I/O로 끝날 수 있다. 이는 특히 HDD의 경우 문제가 된다.&lt;/li&gt;
+  &lt;li&gt;FS free list 관리 오버 헤드가 증가할 수 있다.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test9.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test9.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/rocksdb/mysql/2018/04/18/test8.html</link>
+        <guid isPermaLink="true">http://localhost:4000/rocksdb/mysql/2018/04/18/test8.html</guid>
+        
+        
+        <category>RocksDB</category>
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test7.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test7.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test6.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test6.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test5.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test5.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test4.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test4.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/rocksdb/2018/04/18/test3.html</link>
+        <guid isPermaLink="true">http://localhost:4000/rocksdb/2018/04/18/test3.html</guid>
+        
+        
+        <category>RocksDB</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test2.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test2.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/mysql/2018/04/18/test10.html</link>
+        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test10.html</guid>
+        
+        
+        <category>MySQL</category>
+        
+      </item>
+    
+      <item>
+        <title>Test</title>
+        <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
+        <link>http://localhost:4000/rocksdb/2018/04/18/test1.html</link>
+        <guid isPermaLink="true">http://localhost:4000/rocksdb/2018/04/18/test1.html</guid>
+        
+        
+        <category>RocksDB</category>
+        
+      </item>
+    
+  </channel>
+</rss>

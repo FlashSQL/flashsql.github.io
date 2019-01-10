@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Punch Hole</title>
+  <meta name="description" content="Punch hole">
+  
+  <meta name="author" content="FlashSQL">
+  <meta name="copyright" content="&copy; FlashSQL 2019">
+  
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/css/lightbox.css">
+
+  <!-- Favicon and other icons (made with http://www.favicon-generator.org/) -->
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/assets/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/assets/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/assets/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/assets/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/assets/icons/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/assets/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <!-- Facebook OGP cards -->
+  <meta property="og:description" content="Punch hole" />
+  <meta property="og:url" content="http://localhost:4000" />
+  <meta property="og:site_name" content="FlashSQL 기술 블로그" />
+  <meta property="og:title" content="Punch Hole" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="http://localhost:4000/assets/vldb_logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="612" />
+  <meta property="og:image:height" content="605" />
+  
+
+  
+
+  
+
+  <!-- Site styles -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/mysql/2018/04/18/test9.html">
+  <link rel="alternate" type="application/rss+xml" title="FlashSQL 기술 블로그" href="http://localhost:4000/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="navigation" role="banner">
+  <div class="navigation-wrapper">
+    <a href="/" class="logo">
+      
+      <img src="/assets/vldb_web_logo.png" alt="FlashSQL 기술 블로그">
+      
+    </a>
+    <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu">
+      <i class="fa fa-bars"></i>
+    </a>
+    <nav role="navigation">
+      <ul id="js-navigation-menu" class="navigation-menu show">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <li class="nav-link"><a href="/posts/">Posts</a>
+          
+        
+          
+          <li class="nav-link"><a href="/category/mysql/">MySQL</a>
+          
+        
+          
+          <li class="nav-link"><a href="/category/rocksdb/">RocksDB</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+        <div class="post">
+
+<div class="post-header-container " >
+  <div class="scrim ">
+    <header class="post-header">
+      <h1 class="title">Punch Hole</h1>
+      <p class="info">by <strong>Mijin An</strong></p>
+    </header>
+  </div>
+</div>
+
+<div class="wrapper">
+
+ <span class="page-divider">
+  <span class="one"></span>
+  <span class="two"></span>
+</span>
+ 
+
+<section class="post-meta">
+  <div class="post-date">2018-04-18</div>
+  <div class="post-categories">
+   
+    
+    <a href="/category/MySQL">MySQL</a>
+    
+  
+  </div>
+</section>
+
+<article class="post-content">
+  <h1 id="punch-hole">Punch hole</h1>
+
+<p>아래 두 자료 참고해서 정리</p>
+<ul>
+  <li><a href="https://mysqlserverteam.com/innodb-transparent-page-compression/">InnoDB Transparent Page Compression</a></li>
+  <li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-page-compression.html">MySQL 5.7 Manual</a></li>
+</ul>
+
+<h2 id="transparent-page-compression">Transparent Page Compression</h2>
+
+<p>InnoDB는 <a href="https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_file_per_table">file-per-table</a> 테이블스페이스에 존재하는 테이블에 대해 <strong>페이지 레벨</strong> 압축을 지원한다. 이는 <em>Transparent Page Compression</em> 라 불린다. 페이지 압축은 <code class="highlighter-rouge">CREATE TABLE</code> 또는 <code class="highlighter-rouge">ALTER TABLE</code> 문에 <code class="highlighter-rouge">COMPRESSION</code> attribute를 명시하여 사용할 수 있으며, <em>Zlib</em>과 <em>LZ4</em> 압축 알고리즘을 지원한다. 예를 들어, 아래와 같이 사용할 수 있다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE TABLE t1 <span class="o">(</span>c1 INT<span class="o">)</span> <span class="nv">COMPRESSION</span><span class="o">=</span><span class="s2">"zlib"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>한편, <code class="highlighter-rouge">ALTER TABLE ... COMPRESSION</code>은 테이블스페이스의 압축 attribute만 업데이트한다(즉, metadata만 변경). 새 압축 알고리즘을 설정한 후에 발생하는 쓰기는 새로운 설정을 사용하지만, 기존 압축 페이지에 새 압축 알고리즘을 적용하려면 <code class="highlighter-rouge">OPTIMIZE TABLE</code>을 사용하여 테이블을 재빌드해야 한다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALTER TABLE t1 <span class="nv">COMPRESSION</span><span class="o">=</span><span class="s2">"zlib"</span><span class="p">;</span>
+OPTIMIZE TABLE t1<span class="p">;</span>
+</code></pre></div></div>
+
+<p>High level에서 봤을 때, transparent page compression은 간단한 페이지 변환이다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Write : Page -&gt; Transform -&gt; Write transformed page to disk -&gt; Punch hole
+Read  : Page from disk -&gt; Transform -&gt; Original Page
+</code></pre></div></div>
+
+<p>MySQL 5.7에는 여러 개의 페이지 플러싱 전용 thread가 존재한다. 이는 디스크에 페이지를 쓰기 전에 전용 background thread로 “변환”을 오프로드하여 디스크에 기록한 후, 압축과 “hole punching”을 병렬 처리하는 데 적합하다.</p>
+
+<p>그리고 transparent page compression 기능을 사용하려면 운영 체제와 파일 시스템이 <a href="https://en.wikipedia.org/wiki/Sparse_file">sparse files</a>과 hole punching을 지원해야 한다.</p>
+
+<blockquote>
+  <p>Sparse file은 0이 아닌 영역에만 물리적인 디스크 공간을 할당하는 파일 유형으로써, 파일 자체가 부분적으로 비어 있는 경우 파일 시스템 공간을 보다 효율적으로 사용할 수 있음</p>
+</blockquote>
+
+<p align="center">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Sparse_file_%28en%29.svg/1024px-Sparse_file_%28en%29.svg.png" alt="sparse file" width="400" />
+</p>
+
+<h2 id="linux-상에서의-hole-punch-크기">Linux 상에서의 Hole Punch 크기</h2>
+
+<p>Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 <code class="highlighter-rouge">InnoDB 페이지 크기 - 파일 시스템 블록 크기</code>보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-parameters.html#sysvar_innodb_page_size">innodb_page_size</a>가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.</p>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<p>Hole punching에서 <code class="highlighter-rouge">ls -l</code>로 보여지는 파일 크기는 블록 디바이스의 실제 할당 크기가 아닌 논리적 파일 크기를 표시한다. 이는 sparse file의 일반적인 이슈며, 논리적 크기와 실제 할당 크기는 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-sys-tablespaces-table.html">INNODB_SYS_TABLESPACES</a>의 information schema 테이블에 쿼리를 수행하여 얻을 수 있다.</p>
+
+<p>다음과 같은 추가적인 열이 information schema 뷰에 추가되었다: <code class="highlighter-rouge">FS_BLOCK_SIZE</code>, <code class="highlighter-rouge">FILE_SIZE</code>, <code class="highlighter-rouge">ALLOCATED_SIZE</code> 및 <code class="highlighter-rouge">COMPRESSION</code></p>
+
+<ul>
+  <li><code class="highlighter-rouge">FS_BLOCK_SIZE</code>: 파일 시스템 블록 크기</li>
+  <li><code class="highlighter-rouge">FILE_SIZE</code>: 파일의 논리적 크기이며, ls -l로 볼 수 있음</li>
+  <li><code class="highlighter-rouge">ALLOCATED_SIZE</code>: 파일 시스템의 블록 디바이스에 실제로 할당된 크기</li>
+  <li><code class="highlighter-rouge">COMPRESSION</code>: 현재 압축 알고리즘 설정(있는 경우)</li>
+</ul>
+
+<blockquote>
+  <p>앞서 언급했듯이, <code class="highlighter-rouge">COMPRESSION</code> 값은 현재 테이블스페이스의 설정이며 현재 테이블스페이스에 있는 모든 페이지가 해당 형식을 갖는 것을 보장하지는 않는다.</p>
+</blockquote>
+
+<p>다음은 간단한 예시다:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; <span class="k">select</span> <span class="k">*</span> from information_schema.INNODB_SYS_TABLESPACES WHERE name like <span class="s1">'linkdb%'</span><span class="p">;</span>
++-------+------------------------+------+-------------+----------------------+-----------+---------------+------------+---------------+-------------+----------------+-------------+
+| SPACE | NAME                   | FLAG | FILE_FORMAT | ROW_FORMAT           | PAGE_SIZE | ZIP_PAGE_SIZE | SPACE_TYPE | FS_BLOCK_SIZE | FILE_SIZE   | ALLOCATED_SIZE | COMPRESSION |
++-------+------------------------+------+-------------+----------------------+-----------+---------------+------------+---------------+-------------+----------------+-------------+
+|    23 | linkdb/linktable#P#p0  |    0 | Antelope    | Compact or Redundant |     16384 |             0 | Single     |           512 |  4861198336 |     2376154112 | LZ4         |
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; <span class="k">select </span>name, <span class="o">((</span>file_size-allocated_size<span class="o">)</span><span class="k">*</span>100<span class="o">)</span>/file_size as compressed_pct from information_schema.INNODB_SYS_TABLESPACES WHERE name like <span class="s1">'linkdb%'</span><span class="p">;</span>
++------------------------+----------------+
+| name                   | compressed_pct |
++------------------------+----------------+
+| linkdb/linktable#P#p0  |        51.1323 |
+| linkdb/linktable#P#p1  |        51.1794 |
+| linkdb/linktable#P#p2  |        51.5254 |
+| linkdb/linktable#P#p3  |        50.9341 |
+| linkdb/linktable#P#p4  |        51.6542 |
+| linkdb/linktable#P#p5  |        51.2027 |
+| linkdb/linktable#P#p6  |        51.3837 |
+| linkdb/linktable#P#p7  |        51.6309 |
+| linkdb/linktable#P#p8  |        51.8193 |
+| linkdb/linktable#P#p9  |        50.6776 |
+| linkdb/linktable#P#p10 |        51.2959 |
+| linkdb/linktable#P#p11 |        51.7169 |
+| linkdb/linktable#P#p12 |        51.0571 |
+| linkdb/linktable#P#p13 |        51.4743 |
+| linkdb/linktable#P#p14 |        51.4895 |
+| linkdb/linktable#P#p15 |        51.2749 |
+| linkdb/counttable      |        50.1664 |
+| linkdb/nodetable       |        31.2724 |
++------------------------+----------------+
+18 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="limitations">Limitations</h2>
+
+<h3 id="file-system-fragmentation">File system fragmentation</h3>
+
+<p>블록을 파일 시스템의 free list로 다시 내보내는 hole punching으로 인해 파일 시스템에서 fragmentation이 일어날 수 있다. 여기에는 두 가지 파급 효과가 있다:</p>
+
+<ol>
+  <li>Sequential 스캔이 실제로는 Random I/O로 끝날 수 있다. 이는 특히 HDD의 경우 문제가 된다.</li>
+  <li>FS free list 관리 오버 헤드가 증가할 수 있다.</li>
+</ol>
+
+</article>
+
+
+
+
+
+<section class="share">
+  <span></span>
+  
+    
+    
+      <a href="//www.facebook.com/sharer.php?t=Punch+Hole&u=http%3A%2F%2Flocalhost%3A4000%2Fmysql%2F2018%2F04%2F18%2Ftest9.html"
+        onclick="window.open(this.href, 'facebook-share', 'width=550,height=255');return false;">
+        <i class="fa fa-facebook-square fa-lg"></i>
+      </a>
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      <a href="//www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmysql%2F2018%2F04%2F18%2Ftest9.html"
+        onclick="window.open(this.href, 'linkedin-share', 'width=550,height=255');return false;">
+        <i class="fa fa-linkedin-square fa-lg"></i>
+      </a>
+    
+  
+    
+    
+    
+      <a href="//plus.google.com/share?title=Punch+Hole&url=http%3A%2F%2Flocalhost%3A4000%2Fmysql%2F2018%2F04%2F18%2Ftest9.html"
+        onclick="window.open(this.href, 'google-plus-share', 'width=550,height=255');return false;">
+        <i class="fa fa-google-plus-square fa-lg"></i>
+      </a>
+    
+    
+  
+  <a href="/feed.xml">
+      <i class="fa fa-rss"></i>
+  </a>
+</section>
+
+
+
+
+</div>
+</div>
+
+    </div>
+
+    <footer class="site-footer">
+  <ul class="links">
+    
+      
+    
+      
+      <li>
+        <a href="https://github.com/flashsql" title="Fork me on GitHub">
+          <i class="fa fa-github"></i>
+        </a>
+      </li>
+      
+    
+      
+    
+      
+    
+    <li>
+        <a href="/feed.xml">
+            <i class="fa fa-rss"></i>
+        </a>
+    </li>
+    <li>
+      <a href="mailto:vldb.skku@gmail.com">
+        <i class="fa fa-envelope-o"></i>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="footer-menu">
+    <li><a href="http://flashsql.skku.ac.kr">FlashSQL</a></li>
+    <li><a href="http://vldb.skku.edu">VLDB Lab.</a></li>
+  </ul>
+
+  <p class="copyright">
+    <a href="http://vldb.skku.edu">Copyright Sungkyunkwan University VLDB Lab.</a>
+    All rights reserved.
+  </p>
+
+</footer>
+
+<!-- Scripts -->
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // Default syntax highlighting
+  hljs.initHighlightingOnLoad();
+
+  // Header
+  var menuToggle = $('#js-mobile-menu').unbind();
+  $('#js-navigation-menu').removeClass("show");
+  menuToggle.on('click', function(e) {
+    e.preventDefault();
+    $('#js-navigation-menu').slideToggle(function(){
+      if($('#js-navigation-menu').is(':hidden')) {
+        $('#js-navigation-menu').removeAttr('style');
+      }
+    });
+  });
+});
+
+</script>
+
+
+
+
+
+
+  </body>
+
+</html>
