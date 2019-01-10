@@ -299,13 +299,20 @@ pre code.hljs {
 		}
 		.tags {
 			font-size: 0.9em;
-		}
-		.rss {
-			margin: 1em 0 0 0;
-			@include span-columns(12);
-			@include media ($tablet) {
-				margin: 1em 0;
-				@include span-columns(6);
+			a.tag {
+		    display: inline-block;
+		    margin: 0 5px 5px 0;
+		    padding: 0 10px;
+		    border: 1px solid #e6e6e6;
+		    border-radius: 4px;
+		    vertical-align: middle;
+		    background-color: #fafafa;
+		    color: #1e1e1e;
+		    font-size: 13px;
+		    line-height: 24px; /* 24px = 26(height) - 2(border) */
+			}
+			a.tag:hover {
+	    	background-color: #e6e6e6;
 			}
 		}
 		.share {
@@ -313,7 +320,7 @@ pre code.hljs {
 			margin: 0 0 1em 0;
 			@include span-columns(12);
 			@include media ($tablet) {
-				@include span-columns(6);
+				@include span-columns(12);
 				margin: 1em 0;
 				text-align: right;
 			}
@@ -379,9 +386,47 @@ pre code.hljs {
 */
 .site-footer {
 	$link-color: $white;
-	padding: 1em 1em 2em 1em;
+	padding: 20px 30px;
 	background-color: $highlight-color;
 	color: $white;
+	width: 100%;
+	.links {
+	    float: right;
+	    text-align: right;
+	}
+	.footer-menu, .copyright {
+	    text-align: left;
+			font-size: 13px;
+	}
+
+	.footer-menu > *, .links > *, .copyright > * {
+	    list-style: none;
+	    display: inline;
+	}
+
+	.footer-menu > li, .copyright {
+	    padding-left: 0;
+	    padding-right: 10px;
+	}
+
+	.footer-menu > li + li {
+	    padding-left: 10px;
+	    border-left: 1px solid #ccc;
+	}
+
+	.links > li > a {
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin-left: 10px;
+	    background-repeat: no-repeat;
+	    background-size: 20px 20px;
+			font-size: 15px;
+	}
+
+	.copyright {
+			margin-left: 27px;
+	}
 	a {
 	  color: $link-color;
 	  &:active,
@@ -400,60 +445,5 @@ pre code.hljs {
 	.footer-heading {
 
 	}
-	/*
-	*	Site Navigation (left)
-	*/
-	.site-navigation {
-		@include span-columns(12);
-		@include media ($mobile) {
-			@include span-columns(6);
-		}
-		@include media ($tablet) {
-			@include span-columns(4);
-		}
-		font-size: 0.9em;
-		ul {
-			@extend %default-ul;
-		}
-	}
-	/*
-	*	Contact Info (center)
-	*/
-	.site-contact {
-		margin-top: 1em;
-		@include span-columns(12);
-		@include media ($mobile) {
-			@include span-columns(6);
-			margin-top: 0;
-			margin-right: 0;
-		}
-		@include media ($tablet) {
-			@include span-columns(4);
-			margin-top: 0;
-		}
-		font-size: 0.9em;
-		i {
-			width: 1.25em;
-			text-align: center;
-		}
-		ul {
-			@extend %default-ul;
-		}
-	}
-	/*
-	*	Site Description/Signature (right)
-	*/
-	.site-signature {
-		margin-top: 1em;
-		@include span-columns(12);
-		@include media ($tablet) {
-			@include span-columns(4);
-			margin-right: 0;
-			margin-top: 0;
-		}
-		font-size: 0.9em;
-		a {
-			text-decoration: underline;
-		}
-	}
+
 }
