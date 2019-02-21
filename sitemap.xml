@@ -1,41 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>http://localhost:4000/authors/mijin-an.html</loc>
-</url>
-<url>
-<loc>http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</loc>
-<lastmod>2015-04-18T17:43:59+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/mysql/flash/2018/04/18/test.html</loc>
-<lastmod>2018-04-18T17:43:59+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/mysql/2018/04/18/test9.html</loc>
-<lastmod>2018-04-18T17:43:59+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/posts/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/category/mysql/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/category/rocksdb/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/category/flash/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/googlebbe52c63454930a8.html</loc>
-<lastmod>2019-02-21T14:04:45+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/naver3661d552de0b3ab828cb9b9eb9a794fd.html</loc>
-<lastmod>2019-02-21T14:21:33+09:00</lastmod>
-</url>
+  
+    <url>
+      <loc>http://localhost:4000/mysql/2018/04/18/test9.html</loc>
+      
+        <lastmod>2018-04-18T17:43:59+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/mysql/flash/2018/04/18/test.html</loc>
+      
+        <lastmod>2018-04-18T17:43:59+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</loc>
+      
+        <lastmod>2015-04-18T17:43:59+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
 </urlset>
