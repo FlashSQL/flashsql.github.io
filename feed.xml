@@ -3,10 +3,10 @@
   <channel>
     <title>FlashSQL 기술 블로그</title>
     <description></description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Feb 2019 15:23:59 +0900</pubDate>
-    <lastBuildDate>Thu, 21 Feb 2019 15:23:59 +0900</lastBuildDate>
+    <link>http://flashsql.github.io/</link>
+    <atom:link href="http://flashsql.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 21 Feb 2019 15:32:42 +0900</pubDate>
+    <lastBuildDate>Thu, 21 Feb 2019 15:32:42 +0900</lastBuildDate>
     <generator>Jekyll v3.8.5</generator>
     
       <item>
@@ -118,8 +118,8 @@ Read  : Page from disk -&amp;gt; Transform -&amp;gt; Original Page
 &lt;/ol&gt;
 </description>
         <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/2018/04/18/test9.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/2018/04/18/test9.html</guid>
+        <link>http://flashsql.github.io/mysql/2018/04/18/test9.html</link>
+        <guid isPermaLink="true">http://flashsql.github.io/mysql/2018/04/18/test9.html</guid>
         
         
         <category>MySQL</category>
@@ -131,8 +131,8 @@ Read  : Page from disk -&amp;gt; Transform -&amp;gt; Original Page
         <description>&lt;p&gt;Linux 시스템에서 파일 시스템의 블록 크기는 hole punching에 사용되는 단위 크기다. 따라서, 페이지 압축은 InnoDB 페이지 크기 - 파일 시스템 블록 크기보다 작거나 같은 크기로 압축될 수 있는 경우에만 작동한다. 예를 들어, innodb_page_size가 16KB고 파일 시스템 블록 크기가 4KB인 경우, hole punching을 가능하게 하려면 페이지 데이터를 12KB 이하로 압축해야 한다.&lt;/p&gt;
 </description>
         <pubDate>Wed, 18 Apr 2018 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/flash/2018/04/18/test.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/flash/2018/04/18/test.html</guid>
+        <link>http://flashsql.github.io/mysql/flash/2018/04/18/test.html</link>
+        <guid isPermaLink="true">http://flashsql.github.io/mysql/flash/2018/04/18/test.html</guid>
         
         
         <category>MySQL</category>
@@ -153,8 +153,8 @@ cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
 </description>
         <pubDate>Sat, 18 Apr 2015 17:43:59 +0900</pubDate>
-        <link>http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</link>
-        <guid isPermaLink="true">http://localhost:4000/mysql/rocksdb/2015/04/18/dummy.html</guid>
+        <link>http://flashsql.github.io/mysql/rocksdb/2015/04/18/dummy.html</link>
+        <guid isPermaLink="true">http://flashsql.github.io/mysql/rocksdb/2015/04/18/dummy.html</guid>
         
         
         <category>MySQL</category>
